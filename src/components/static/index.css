@@ -1,0 +1,38 @@
+.navbar-font-style {
+    color: white;
+    opacity: 0.7;
+    font-weight: lighter;
+    text-transform: uppercase;
+    justify-content: space-between;
+}
+
+.user-menu-button {
+    margin-top: -9px;
+    margin-left:150px;
+}
+
+.background-image {
+    background-image: url("https://kabekin.com/uploads/converted/21/03/12/4195183360-clam_beach-1920x1080-xyl-1920x1080-MM-100.jpg");
+    background-size: cover;
+    /*height: 100vh;*/
+    background-attachment: fixed;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.footer {
+    width:800px;
+    margin:auto;
+    border-top-left-radius:20px;
+    border-top-right-radius:20px;
+}
+
+
+
+
+
+
+
+

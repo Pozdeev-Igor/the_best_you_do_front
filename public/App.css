@@ -1,0 +1,9 @@
+.background-image {
+    background-image: url("https://images.wallpaperscraft.ru/image/single/nebo_oblaka_luna_141565_1920x1080.jpg");
+    background-size: cover;
+    height: 100vh;
+}
+
+.pointer {
+    cursor: pointer;
+}
