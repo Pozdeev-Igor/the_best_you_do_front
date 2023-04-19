@@ -7,7 +7,8 @@ import {useUser} from "../utils/userProvider/UserProvider";
 import ajax from "../utils/FetchService";
 import formatDate from "../utils/formatDate";
 import formatPhoneNumber from "../utils/formatPhoneNumber";
-import {Button, Form, Transition} from "semantic-ui-react";
+import {Button, Form, Transition, Placeholder} from "semantic-ui-react";
+
 
 const PersonalAccountPage = () => {
 
@@ -25,14 +26,8 @@ const PersonalAccountPage = () => {
     });
 
     const [selectedFile, setSelectedFile] = useState(null);
-
-    const [advertsByUser, setAdvertsByUser] = useState([]);
     const [showEdit, setShowEdit] = useState(false);
-    const [showEditBlock, setShowEditBlock] = useState(false);
-    const targetEdit = useRef(null);
-
     const previousProfileDataValue = useRef(userProfile)
-
 
     function updateUserProfile(prop, label) {
         const newUserProfile = {...userProfile};
@@ -40,7 +35,7 @@ const PersonalAccountPage = () => {
         setUserProfile(newUserProfile);
     }
 
-    function saveUsersName() {
+    function updateUserData() {
         if (previousProfileDataValue.current.name !== userProfile.name) {
             updateUserProfile('name', userProfile.name)
         }
@@ -51,24 +46,8 @@ const PersonalAccountPage = () => {
             updateUserProfile('phoneNumber', userProfile.phoneNumber)
         }
         persist();
-        setShowEditBlock(false);
+        setShowEdit(!showEdit);
     }
-    //
-    // function saveUsersEmail() {
-    //     if (previousProfileDataValue.current.email !== userProfile.email) {
-    //         updateUserProfile('email', userProfile.email)
-    //     }
-    //     persist();
-    //     setShowEditBlock(false);
-    // }
-    //
-    // function saveUsersPhone() {
-    //     if (previousProfileDataValue.current.phoneNumber !== userProfile.phoneNumber) {
-    //         updateUserProfile('phoneNumber', userProfile.phoneNumber)
-    //     }
-    //     persist();
-    //     setShowEditBlock(false);
-    // }
 
     function persist() {
         const reqBody = {
@@ -81,6 +60,21 @@ const PersonalAccountPage = () => {
         })
     }
 
+    function updateAvatar() {
+
+        let formData = new FormData();
+        formData.append('file', selectedFile);
+
+        setShowEdit(!showEdit)
+        fetch(`/api/auth/images/new/${userId}`,
+            {
+                method:'POST',
+                body:formData
+            }).then(response => {
+            console.log(response.body)
+        })
+    }
+
     useEffect(() => {
         ajax(`/api/auth/user/${userId}`, "GET").then(usersData => {
             if (usersData) {
@@ -88,14 +82,14 @@ const PersonalAccountPage = () => {
             } else return null;
             showEditForm()
         })
-    }, [user.jwt, userId])
+    }, [user.jwt])
 
     function showEditForm() {
         setShowEdit(!showEdit)
     }
 
     const changeHandler = (event) => {
-        setSelectedFile(event.target.files);
+        setSelectedFile(event.target.files[0]);
     };
 
     return (
@@ -106,20 +100,34 @@ const PersonalAccountPage = () => {
                 <MDBRow className='g-0'>
                     <MDBCol md='4'>
                         <div className='bg-image hover-zoom'>
-                            <MDBCardImage
-                                src='https://res.cloudinary.com/ddkxweaw0/image/upload/v1681278003/cld-sample.jpg'
-                                alt='...'
-                                fluid/>
+                            {
+                                userProfile.avatar === null ? (
+
+                            <Placeholder style={{ height: 400, width: 300 }}>
+                                <Placeholder.Image />
+                            </Placeholder>
+
+                                ) : (
+                                    <MDBCardImage
+                                        src={userProfile.avatar}
+                                        alt='...'
+                                        fluid/>
+                                )
+                            }
                         </div>
                         <div>
-                            <Transition.Group animation='drop' duration={500}>
+                            <Transition.Group animation='zoom' duration={300}>
                                 {!showEdit && (
+                                    <>
                                     <MDBFile size='sm' id='formFileSm'
                                              className='mb-3 mt-3'
                                              style={{borderColor:'lightgray', color:'lightgray'}}
                                              placeholder='изменить аватар'
                                              onChange={changeHandler}
                                     />
+                                    <Button primary fluid className='mt-3'
+                                    onClick={() => {updateAvatar()}}>Обновить аватар</Button>
+                                    </>
                                 )}
                             </Transition.Group>
                         </div>
@@ -141,7 +149,7 @@ const PersonalAccountPage = () => {
                                 </span>
                                 </div>
                             </MDBCardTitle>
-                            <Transition.Group animation='drop' duration={500}>
+                            <Transition.Group animation='zoom' duration={500}>
                                 {!showEdit && (
                                     <Form.Input
                                         fluid
@@ -153,7 +161,7 @@ const PersonalAccountPage = () => {
                             <MDBCardText className='mt-3 mb-0'>
                                 email: {userProfile.email}
                             </MDBCardText>
-                            <Transition.Group animation='drop' duration={500}>
+                            <Transition.Group animation='zoom' duration={500}>
                                 {!showEdit && (
                                     <Form.Input
                                         fluid
@@ -165,23 +173,24 @@ const PersonalAccountPage = () => {
                             <MDBCardText  className='mt-3 mb-0'>
                                 phone number: {formatPhoneNumber(userProfile.phoneNumber)}
                             </MDBCardText>
-                            <Transition.Group animation='drop' duration={500}>
+                            <Transition.Group animation='zoom' duration={500}>
                                 {!showEdit && (
                                     <Form.Input
                                         fluid
                                         placeholder={formatPhoneNumber(userProfile.phoneNumber)}
                                         onChange={(e) => updateUserProfile('phoneNumber', e.target.value)}
                                     />
+
                                 )}
                             </Transition.Group>
 
 
 
 
-                            <Transition.Group animation='drop' duration={500}>
+                            <Transition.Group animation='zoom' duration={300}>
                                 {!showEdit && (
                                     <Button primary fluid className='mt-3'
-                                            onClick={() => {saveUsersName()}}>Сохранить</Button>
+                                            onClick={() => {updateUserData()}}>Сохранить</Button>
                                 )}
                             </Transition.Group>
 

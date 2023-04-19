@@ -1,7 +1,40 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
+import {useNavigate} from "react-router-dom";
 
 const SignUpPage = () => {
+
+    const navigate = useNavigate();
+    const [formValue, setFormValue] = useState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
+    });
+
+    const onChange = (e: any) => {
+        setFormValue({...formValue, [e.target.placeholder]: e.target.value});
+    };
+
+    function sendSignupRequest(e) {
+        if (formValue.confirmPassword === '' ||
+            formValue.password === '' ||
+            formValue.name === '' || formValue.email === '' || formValue.username === '') {
+            return null;
+        } else {
+
+            fetch("api/auth/register", {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "post",
+                body: JSON.stringify(formValue),
+            })
+                .then(response => response.json());
+            navigate("/");
+        }
+    }
+
     return (
         <div className='background-image'>
             <Grid textAlign='center' style={{ height: '105vh' }} verticalAlign='middle'>
@@ -15,11 +48,15 @@ const SignUpPage = () => {
                                 fluid icon='user'
                                 iconPosition='left'
                                 placeholder='Username'
+                                value={formValue.username}
+                                onChange={onChange}
                             />
                             <Form.Input
                                 fluid icon='mail'
                                 iconPosition='left'
                                 placeholder='E-mail address'
+                                value={formValue.email}
+                                onChange={onChange}
                             />
                             <Form.Input
                                 fluid
@@ -27,6 +64,8 @@ const SignUpPage = () => {
                                 iconPosition='left'
                                 placeholder='Password'
                                 type='password'
+                                value={formValue.password}
+                                onChange={onChange}
                             />
                             <Form.Input
                                 fluid
@@ -34,9 +73,12 @@ const SignUpPage = () => {
                                 iconPosition='left'
                                 placeholder='Confirm password'
                                 type='password'
+                                value={formValue.confirmPassword}
+                                onChange={onChange}
                             />
 
-                            <Button color='blue' fluid size='large'>
+                            <Button color='blue' fluid size='large'
+                                    onClick={() => sendSignupRequest()}>
                                 Sign Up
                             </Button>
                         </Segment>
