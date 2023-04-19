@@ -1,8 +1,9 @@
 {
   "name": "front",
   "version": "0.1.0",
+  "homepage": "https://Pozdeev-Igor.github.io/the_best_you_do_front",
   "private": true,
-  "proxy": "http://localhost:8080/",
+  "proxy": "https://the-best-you-do.osc-fr1.scalingo.io/",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.4.0",
     "@mdi/js": "^7.2.96",
@@ -25,6 +26,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -48,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^5.0.0",
     "react-router-dom": "^6.10.0"
   }
 }
