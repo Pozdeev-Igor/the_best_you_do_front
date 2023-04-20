@@ -1,10 +1,10 @@
 import {Route, Routes} from "react-router-dom";
-import SignUpPage from "./components/pages/SignUpPage";
+import SignUpPage from "./components/pages/signupPage/SignUpPage";
 import LoginModal from "./components/modal/LoginModal";
 import React, {useState} from "react";
 import Homepage from "./components/pages/Homepage";
 import {useUser} from "./components/utils/userProvider/UserProvider";
-import PersonalAccountPage from "./components/pages/PersonalAccountPage";
+import PersonalAccountPage from "./components/pages/personalAccountPage/PersonalAccountPage";
 import NewProductPage from "./components/pages/newProductPage/NewProductPage";
 import PrivateRoute from "./components/customRoutes/PrivateRoute";
 
