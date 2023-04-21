@@ -4,11 +4,12 @@ import {useParams} from "react-router-dom";
 import {useUser} from "../../utils/userProvider/UserProvider";
 import ajax from "../../utils/FetchService";
 import formatDate from "../../utils/formatDate";
-import {Button, Transition} from "semantic-ui-react";
+import {Button, Transition, Checkbox} from "semantic-ui-react";
 import Avatar from "./components/Avatar";
 import CardTitle from "./components/CardTitle";
 import CardEmail from "./components/CardEmail";
 import CardPhoneNumber from "./components/CardPhoneNumber";
+import roleParser from "../../utils/RoleParser";
 
 
 const PersonalAccountPage = () => {
@@ -22,7 +23,8 @@ const PersonalAccountPage = () => {
         name: "",
         phoneNumber: "",
         count: null,
-        rate: null
+        rate: null,
+        authorities: []
     });
 
     const [showEdit, setShowEdit] = useState(false);
@@ -54,9 +56,7 @@ const PersonalAccountPage = () => {
             email: userProfile.email,
             phoneNumber: userProfile.phoneNumber,
         }
-        ajax(`/api/auth/user/${userId}/edit`, 'PATCH', user.jwt, reqBody).then(response => {
-            console.log(response)
-        })
+        ajax(`/api/auth/user/${userId}/edit`, 'PATCH', user.jwt, reqBody)
     }
 
     useEffect(() => {
@@ -66,7 +66,7 @@ const PersonalAccountPage = () => {
             } else return null;
             showEditForm()
         })
-    }, [user.jwt])
+    }, [user.jwt, setUserProfile])
 
     function showEditForm() {
         setShowEdit(!showEdit)
@@ -100,6 +100,15 @@ const PersonalAccountPage = () => {
                                 userProfile={userProfile}
                                 showEdit={showEdit}
                                 updateUserProfile={updateUserProfile}/>
+
+                             <MDBCardText  className='mt-3 mb-0'>
+                                    роли: {userProfile.authorities.map(auth => (roleParser(auth)))}
+                             </MDBCardText>
+                            <Transition.Group animation='zoom' duration={300}>
+                                {!showEdit && (
+                                    <Checkbox toggle />
+                                )}
+                            </Transition.Group>
 
                             <Transition.Group animation='zoom' duration={300}>
                                 {!showEdit && (

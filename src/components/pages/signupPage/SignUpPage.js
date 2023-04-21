@@ -1,26 +1,16 @@
-import React, {useState} from 'react';
-import {Button, Dropdown, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
+import React, {useEffect, useState} from 'react';
+import {Button, Checkbox, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
 import {useNavigate} from "react-router-dom";
 import {PatternFormat} from 'react-number-format';
+import LoginModal from "../../modal/LoginModal";
 
 const SignUpPage = () => {
 
     const navigate = useNavigate();
 
-    const [options, setOptions] = useState([
-        {
-            key: 'ROLE_CONSUMER',
-            value: 'ROLE_CONSUMER',
-            text: 'Заказчик'
-        },
-
-        {
-            key: 'ROLE_PRODUCER',
-            value: 'ROLE_PRODUCER',
-            text: 'Исполнитель'
-        }
-    ]);
-
+    const [show, setShow] = useState(() => false);
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     const [formValue, setFormValue] = useState({
         username: '',
@@ -29,20 +19,28 @@ const SignUpPage = () => {
         phoneNumber: '',
         password: '',
         confirmPassword: '',
-        role: ''
+        authorities: []
     });
 
-    const [role, setRole] = useState("");
+    const [authorities, setAuthorities] = useState([]);
 
     const onChange = (e: any) => {
         setFormValue({ ...formValue, [e.target.name]: e.target.value});
-        console.log(formValue)
     };
 
+
     const handleSelected = (e, data) => {
-        setRole(data.value)
-        setFormValue({...formValue, role: data.value})
+        if(data.checked) {
+            setAuthorities([...authorities, data.value])
+        }
+        else {
+            setAuthorities(authorities.filter(auth => auth !== data.value))
+        }
     }
+
+    useEffect(() => {
+        setFormValue({...formValue, authorities: authorities})
+    }, [authorities])
 
     function sendSignupRequest(e) {
         if (formValue.confirmPassword === '' ||
@@ -133,16 +131,28 @@ const SignUpPage = () => {
                                 onChange={onChange}
                             />
 
-                            <Dropdown
-                                placeholder='В качестве кого вы хотите зарегистрироваться?'
-                                fluid
-                                search
-                                selection
-                                options={options}
-                                // value={formValue.role}
-                                onChange={handleSelected}
-                            />
+                            <Grid textAlign='center'>
+                                <Grid.Row>
+                                    <Header as='h4' color='blue' textAlign='center' className='mb-0 mt-3'>
+                                        В качестве кого вы хотите зарегистрироваться?
+                                    </Header>
+                                    <small className='text-muted text-center'>можно выбрать оба варианта</small>
+                                    <div className='d-flex justify-content-center mt-3'>
+                                        <Checkbox
+                                            label='Заказчик'
+                                            onClick={(event, data) => {handleSelected(event, data)}}
+                                            name='authorities'
+                                            value='ROLE_CONSUMER'/>
 
+                                        <Checkbox
+                                            label='Исполнитель'
+                                            className='ms-5'
+                                            onClick={(event, data) => {handleSelected(event, data)}}
+                                            name='authorities'
+                                            value='ROLE_PRODUCER'/>
+                                    </div>
+                                </Grid.Row>
+                            </Grid>
                             <Button color='blue' fluid size='large'
                                     onClick={() => sendSignupRequest()}
                             className='mt-3'>
@@ -151,10 +161,13 @@ const SignUpPage = () => {
                         </Segment>
                     </Form>
                     <Message>
-                        Already have an account? <a href='src/components/pages/signupPage/SignUpPage#'>Log In</a>
+                        Already have an account? <span className='pointer' style={{color:'#0E6EB8'}} onClick={() => {handleShow()}}>Log In</span>
                     </Message>
                 </Grid.Column>
             </Grid>
+            <div>
+                <LoginModal show={show} handleClose={handleClose} handleShow={handleShow}/>
+            </div>
         </div>
     );
 };

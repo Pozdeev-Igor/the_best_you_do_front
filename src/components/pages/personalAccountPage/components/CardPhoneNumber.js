@@ -7,7 +7,7 @@ const CardPhoneNumber = ({showEdit, updateUserProfile, userProfile}) => {
     return (
         <div>
             <MDBCardText  className='mt-3 mb-0'>
-                phone number: {formatPhoneNumber(userProfile.phoneNumber)}
+                номер телефона: {formatPhoneNumber(userProfile.phoneNumber)}
             </MDBCardText>
             <Transition.Group animation='zoom' duration={500}>
                 {!showEdit && (
