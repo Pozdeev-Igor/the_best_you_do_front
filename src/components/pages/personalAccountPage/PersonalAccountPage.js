@@ -10,11 +10,12 @@ import CardTitle from "./components/CardTitle";
 import CardEmail from "./components/CardEmail";
 import CardPhoneNumber from "./components/CardPhoneNumber";
 import roleParser from "../../utils/RoleParser";
+import Roles from "./components/Roles";
 
 
 const PersonalAccountPage = () => {
 
-    const user = useUser();
+        const user = useUser();
     const {userId} = useParams();
     const [userProfile, setUserProfile] = useState({
         id: "",
@@ -74,17 +75,20 @@ const PersonalAccountPage = () => {
 
     return (
         <div className='background-image d-flex justify-content-center d-flex align-items-center d-flex flex-column'
-             style={{paddingTop: '255px', paddingBottom: '255px'}}
-        >
+             style={{paddingTop: '255px', paddingBottom: '255px'}}>
 
             <MDBCard style={{width: '1000px', maxHeight:'3000px'}}>
                 <MDBRow className='g-0'>
+
                     <MDBCol md='4'>
-                        <Avatar userProfile = {userProfile} showEditForm = {showEditForm} showEdit={showEdit}/>
+                        <Avatar
+                            userProfile = {userProfile}
+                            showEditForm = {showEditForm}
+                            showEdit={showEdit}/>
                     </MDBCol>
+
                     <MDBCol md='8'>
                         <MDBCardBody>
-
                             <CardTitle
                                 userProfile={userProfile}
                                 showEditForm={showEditForm}
@@ -101,14 +105,7 @@ const PersonalAccountPage = () => {
                                 showEdit={showEdit}
                                 updateUserProfile={updateUserProfile}/>
 
-                             <MDBCardText  className='mt-3 mb-0'>
-                                    роли: {userProfile.authorities.map(auth => (roleParser(auth)))}
-                             </MDBCardText>
-                            <Transition.Group animation='zoom' duration={300}>
-                                {!showEdit && (
-                                    <Checkbox toggle />
-                                )}
-                            </Transition.Group>
+                            <Roles userProfile={userProfile}/>
 
                             <Transition.Group animation='zoom' duration={300}>
                                 {!showEdit && (
